@@ -16,10 +16,9 @@ async function initCapture(options) {
     const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
       // TODO: send returned data to rails
-      onCaptureIdComplete(data);
-    } else {
-      onCaptureIdComplete(result);
+      console.log(data);
     }
+    onCaptureIdComplete(result);
   } catch (err) {
     switch (err.code) {
       case fadSDK.Errors.CaptureId.NOT_READABLE_CAMERA:
