@@ -1,19 +1,15 @@
 import { getSdkInstance } from "./fadSdk";
 
-async function initCapture() {
+async function initCapture(completedCallback) {
   const fadSDK = getSdkInstance();
   try {
     const { event, data } = await fadSDK.startCaptureId();
     if (event === "PROCESS_COMPLETED") {
-      const container = document.getElementById("jsoneditor");
-      const options = { mode: "view" };
-      const editor = new JSONEditor(container, options);      
-      editor.set(data);
       // TODO: set data format according to the contract
       // TODO: send returned data to rails
+      completedCallback(data);
     } else {
-      const container = document.getElementById("jsoneditor");
-      container.textContent = `Something failed: ${event}`;
+      return { event, data, message: "Something went wrong" };
     }
   } catch (err) {
     switch (err.code) {
@@ -33,15 +29,19 @@ async function initCapture() {
         console.log("restart component");
         break;
       default:
-        // restart component
         console.error(JSON.stringify(err));
         break;
     }
+    completedCallback(err);
   } finally {
     fadSDK.end();
   }
 }
 
-export function setupCaptureID(element) {
-  element.addEventListener("click", () => initCapture());
+export function setupCaptureID(containerId, completedCallback) {
+  const container = document.getElementById(containerId);
+  const button = document.createElement("button");
+  button.textContent = "Capture ID";
+  button.addEventListener("click", () => initCapture(completedCallback));
+  container.appendChild(button);
 }

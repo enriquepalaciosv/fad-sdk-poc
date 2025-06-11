@@ -1,6 +1,6 @@
 import { getSdkInstance } from "./fadSdk";
 
-async function initSelfieValidation() {
+async function initSelfieValidation(completedCallback) {
   const fadSDK = getSdkInstance();
   try {
     const FACETEC_CREDENTIALS = {
@@ -30,15 +30,20 @@ async function initSelfieValidation() {
       },
     };
     const facetecResponse = await fadSDK.startFacetec(FACETEC_CREDENTIALS);
-    console.log(facetecResponse);
+    completedCallback(facetecResponse);
   } catch (err) {
-    const container = document.getElementById("jsoneditor");
-    container.textContent = err.code;
+    completedCallback(err);
   } finally {
     fadSDK.end();
   }
 }
 
-export function setupSelfieValidation(element) {
-  element.addEventListener("click", () => initSelfieValidation());
+export function setupSelfieValidation(containerId, completedCallback) {
+  const container = document.getElementById(containerId);
+  const button = document.createElement("button");
+  button.textContent = "Selfie Validation";
+  button.addEventListener("click", () =>
+    initSelfieValidation(completedCallback)
+  );
+  container.appendChild(button);
 }

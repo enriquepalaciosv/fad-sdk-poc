@@ -32,8 +32,10 @@
       min-height: 100vh;
     }
 
-    .card {
+    .buttons {
       padding: 2em;
+      display: flex;
+      gap: 1em;
     }
 
     button {
@@ -71,6 +73,7 @@
     .result {
       height: 600px;
       width: 400px;
+      margin: 1em;
       text-align: center;
     }
   </style>
@@ -78,9 +81,44 @@
 </head>
 
 <body>
-  <div id="idv-js"></div>
+  <div class="buttons">
+    <div id="capture-id-button"></div>
+    <div id="selfie-verification-button"></div>
+  </div>
   <div id="jsoneditor" class="result"></div>
+
   <script type="module" src="%SCRIPT_SRC%"></script>
+  <script>
+    if (typeof window !== 'undefined') {
+
+      const renderResult = (result) => {
+        const container = document.getElementById("jsoneditor");
+        container.innerHTML = "";
+        const options = { mode: "view" };
+        const editor = new JSONEditor(container, options);
+        editor.set(result);
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const validator = new IdentityValidator({
+          captureIdContainerId: 'capture-id-button',
+          selfieVerificationContainerId: 'selfie-verification-button',
+          api_url: 'https://api.xyzteam.com/submit-verification',
+          business_unit: 'acima',
+          customer_guid: 'cust-0892b27c-52ef-4619-8222-e499d1405c01',
+          onCaptureIdComplete: function (result) {
+            renderResult(result);
+          },
+          onSelfieVerificationComplete: function (result) {
+            renderResult(result);
+          },
+        });
+        validator.renderCaptureId();
+        validator.renderSelfieVerification();
+      });
+    }
+  </script>
+
 </body>
 
 </html>
