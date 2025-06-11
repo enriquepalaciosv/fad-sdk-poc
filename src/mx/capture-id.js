@@ -1,15 +1,24 @@
 import { getSdkInstance } from "./fadSdk";
 
-async function initCapture(completedCallback) {
-  const fadSDK = getSdkInstance();
+export function setupCaptureID(options) {
+  const container = document.getElementById(options.captureIdContainerId);
+  const button = document.createElement("button");
+  button.textContent = "Capture ID";
+  button.addEventListener("click", () => initCapture(options));
+  container.appendChild(button);
+}
+
+async function initCapture(options) {
+  const { environment, fadToken, onCaptureIdComplete } = options;
+  const fadSDK = getSdkInstance(environment, fadToken);
   try {
-    const { event, data } = await fadSDK.startCaptureId();
+    const result = await fadSDK.startCaptureId();
+    const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
-      // TODO: set data format according to the contract
       // TODO: send returned data to rails
-      completedCallback(data);
+      onCaptureIdComplete(data);
     } else {
-      return { event, data, message: "Something went wrong" };
+      onCaptureIdComplete(result);
     }
   } catch (err) {
     switch (err.code) {
@@ -32,16 +41,8 @@ async function initCapture(completedCallback) {
         console.error(JSON.stringify(err));
         break;
     }
-    completedCallback(err);
+    onCaptureIdComplete(err);
   } finally {
     fadSDK.end();
   }
-}
-
-export function setupCaptureID(containerId, completedCallback) {
-  const container = document.getElementById(containerId);
-  const button = document.createElement("button");
-  button.textContent = "Capture ID";
-  button.addEventListener("click", () => initCapture(completedCallback));
-  container.appendChild(button);
 }

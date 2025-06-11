@@ -71,13 +71,13 @@
     }
 
     .result {
-      height: 600px;
+      height: 300px;
       width: 400px;
       margin: 1em;
       text-align: center;
     }
   </style>
-  <title>IDV JS</title>
+  <title>Identity Validator JS</title>
 </head>
 
 <body>
@@ -101,6 +101,8 @@
 
       window.addEventListener('DOMContentLoaded', () => {
         const validator = new IdentityValidator({
+          fadAppName: 'rac',
+          fadToken: 'WVFDSTdGclFBWEt4TytScXpNS1NtdGZtMnhBQU1FWEdkSzMrNFpMMmFVaHR2Mk4xYTVhdmQxS0cvTm5BV2VUbzBVemdOMEQ4UVhyRjV1elFsMFJEaFNXWTBjWTRBSStrMG5IZDQzUjZRZEtVMFBkaWJkOXFQZFBsYUdsbmQram0=',
           captureIdContainerId: 'capture-id-button',
           selfieVerificationContainerId: 'selfie-verification-button',
           api_url: 'https://api.xyzteam.com/submit-verification',
