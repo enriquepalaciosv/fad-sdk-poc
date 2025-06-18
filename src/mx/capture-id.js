@@ -1,4 +1,7 @@
-import { getSdkInstance } from "./fadSdk";
+import { getSdkInstance } from "./fad-sdk";
+import { postData } from "./api-service";
+import { getField } from "./utils";
+import { v4 as uuidv4 } from "uuid";
 
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
@@ -15,32 +18,43 @@ async function initCapture(options) {
     const result = await fadSDK.startCaptureId();
     const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
-      // TODO: send returned data to rails
-      console.log(data);
+      const url = `${options.api_url}/mx/id/results`;
+      const allFields = data.ocr.fields;
+      const payload = {
+        reference_id: uuidv4(),
+        customer_guid: options.customer_guid,
+        business_unit: options.business_unit,
+        capture_result: {
+          first_name: getField(allFields, "Given Names"),
+          paternal_last_name: getField(allFields, "Surname"),
+          maternal_last_name: getField(allFields, "Second Surname"),
+          gender: getField(allFields, "Sex"),
+          address1: getField(allFields, "Address Street"),
+          curp_number: getField(allFields, "Personal Number"),
+          ine_number: getField(allFields, "Document Number"),
+          dob: getField(allFields, "Date of Birth"),
+          rfc: getField(allFields, "unknown"),
+          city: getField(allFields, "unknown"),
+          province_code: getField(allFields, "unknown"),
+          images: {
+            front: data.image.front.data,
+            back: data.image.back.data,
+          },
+        },
+      };
+      postData(url, payload)
+        .then((response) => {
+          onCaptureIdComplete({ sdkResult: result, apiResult: response });
+        })
+        .catch((error) => {
+          onCaptureIdComplete({ sdkResult: result, apiResult: error });
+        });
+    } else {
+      onCaptureIdComplete({ sdkResult: result });
     }
-    onCaptureIdComplete(result);
   } catch (err) {
-    switch (err.code) {
-      case fadSDK.Errors.CaptureId.NOT_READABLE_CAMERA:
-        console.log("Webcam or mic is not ready");
-        break;
-      case fadSDK.Errors.CaptureId.FAIL_GET_OCR:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.VIDEO_PLAYING_ERROR:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.MODEL_FAILED:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.TF_LITE_ERROR:
-        console.log("restart component");
-        break;
-      default:
-        console.error(JSON.stringify(err));
-        break;
-    }
-    onCaptureIdComplete(err);
+    console.error("Error during ID capture:", err);
+    onCaptureIdComplete({ sdkResult: err });
   } finally {
     fadSDK.end();
   }
