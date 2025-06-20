@@ -25,6 +25,10 @@ async function initCapture(options) {
         customer_guid: options.customer_guid,
         business_unit: options.business_unit,
         capture_result: {
+          images: {
+            front: data.image.front.data,
+            back: data.image.back.data,
+          },
           first_name: getField(allFields, "Given Names"),
           paternal_last_name: getField(allFields, "Surname"),
           maternal_last_name: getField(allFields, "Second Surname"),
@@ -33,13 +37,19 @@ async function initCapture(options) {
           curp_number: getField(allFields, "Personal Number"),
           ine_number: getField(allFields, "Document Number"),
           dob: getField(allFields, "Date of Birth"),
-          rfc: getField(allFields, "unknown"),
-          city: getField(allFields, "unknown"),
-          province_code: getField(allFields, "unknown"),
-          images: {
-            front: data.image.front.data,
-            back: data.image.back.data,
-          },
+          city: getField(allFields, "Address Colony"),
+          province_code: getField(allFields, "Address Postal Code"),
+          voter_key: getField(allFields, "Voter Key"),
+          /**
+           * RFC is a Mexican tax identification number.
+           * It is composed of the first 10 characters of the CURP (Clave Única de Registro de Población)
+           * Followed by a 3-character  "homoclave" that is not available in the OCR data.
+           * The "homoclave" is a unique identifier assigned by the tax authority to avoid duplicates.
+           * The "homoclave" can be found in a document called "constacia de situación fiscal".
+           * In this case, we are using only the first 10 characters of the CURP.
+           * Reference: NA-AT tech team and https://www.sat.gob.mx/consulta/70072/clave-para-el-registro-federal-de-contribuyentes-rfc
+           */
+          rfc: `${getField(allFields, "Personal Number")}`.substring(0, 10),
         },
       };
       postData(url, payload)
