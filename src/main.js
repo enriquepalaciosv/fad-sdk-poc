@@ -17,6 +17,7 @@ import { setupSelfieValidation } from "./mx/selfie-validation.js";
  * @property {string} api_url - The base URL of the API to send verification results to.
  * @property {string} business_unit - The business unit identifier.
  * @property {string} customer_guid - The unique identifier for the customer.
+ * @property {string} transaction_guid - Unique ID Found in the API response after the Capture ID request is processed, this value is received in the onCaptureIdComplete callback.
  * @property {VerificationCallback} onCaptureIdComplete - Called when ID card verification is done.
  * @property {VerificationCallback} onSelfieVerificationComplete - Called when selfie verification is done.
  */
