@@ -48,7 +48,7 @@ async function initSelfieValidation(options) {
   } catch (err) {
     console.error(err);
     console.error("Error during Facetec live:", err);
-    onCaptureIdComplete({ sdkResult: err });
+    onSelfieVerificationComplete({ sdkResult: err });
   } finally {
     fadSDK.end();
   }
