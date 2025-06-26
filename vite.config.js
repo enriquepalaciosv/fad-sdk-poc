@@ -18,6 +18,9 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    server: {
+      open: true,
+    },
     plugins: [
       {
         name: "html-transform",

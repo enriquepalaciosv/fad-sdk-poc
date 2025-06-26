@@ -1,3 +1,4 @@
+import "../ui-components.js";
 import { setupCaptureID } from "./mx/capture-id.js";
 import { setupSelfieValidation } from "./mx/selfie-validation.js";
 

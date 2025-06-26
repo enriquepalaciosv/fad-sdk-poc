@@ -6,6 +6,7 @@ export function setupSelfieValidation(options) {
   const { selfieVerificationContainerId } = options;
   const container = document.getElementById(selfieVerificationContainerId);
   const button = document.createElement("button");
+  button.id = "idvjs-selfie-btn";
   button.textContent = "Selfie Validation";
   button.addEventListener("click", () => initSelfieValidation(options));
   container.appendChild(button);
@@ -37,7 +38,10 @@ async function initSelfieValidation(options) {
       };
       postData(url, payload)
         .then((response) => {
-          onSelfieVerificationComplete({ sdkResult: result, apiResult: response });
+          onSelfieVerificationComplete({
+            sdkResult: result,
+            apiResult: response,
+          });
         })
         .catch((error) => {
           onSelfieVerificationComplete({ sdkResult: result, apiResult: error });

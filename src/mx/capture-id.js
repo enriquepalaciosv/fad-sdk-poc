@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
   const button = document.createElement("button");
+  button.id = "idvjs-capture-id-btn";
   button.textContent = "Capture ID";
   button.addEventListener("click", () => initCapture(options));
   container.appendChild(button);

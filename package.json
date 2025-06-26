@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fad-producto/fad-sdk": "^2.1.0",
+    "@material/web": "^2.3.0",
     "uuid": "^11.1.0"
   }
 }
