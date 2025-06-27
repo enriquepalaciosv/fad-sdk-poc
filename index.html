@@ -38,28 +38,35 @@
       <md-outlined-text-field id="config-customer-guid" label="Customer GUID"></md-outlined-text-field>
       <md-outlined-text-field id="config-transaction-guid" label="Transaction GUID"></md-outlined-text-field>
     </div>
-    <div class="row right">
-      <md-filled-button id="capture-id-button" style="display: none;">
-        Capture ID
-        <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="6" y="10" width="36" height="28" rx="2" ry="2" stroke="currentColor" fill="none" />
-          <circle cx="16" cy="24" r="4" stroke="currentColor" />
-          <line x1="26" y1="18" x2="38" y2="18" stroke="currentColor" />
-          <line x1="26" y1="24" x2="38" y2="24" stroke="currentColor" />
-          <line x1="26" y1="30" x2="38" y2="30" stroke="currentColor" />
-        </svg>
-      </md-filled-button>
-      <md-filled-button id="selfie-verification-button" style="display: none;">
-        Selfie Verification
-        <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10 6H6v8M6 38v4h8M38 42h4v-8M42 10V6h-8" stroke="currentColor" />
-          <circle cx="24" cy="24" r="10" stroke="currentColor" />
-          <circle cx="20" cy="22" r="1.5" fill="currentColor" />
-          <circle cx="28" cy="22" r="1.5" fill="currentColor" />
-          <path d="M20 28c1.5 2 6.5 2 8 0" stroke="currentColor" stroke-linecap="round" />
-        </svg>
-      </md-filled-button>
-      <md-outlined-button id="init-js-btn">Initialize JS Library</md-outlined-button>
+
+
+    <div class="row space-between responsive">
+      <div class="row">
+        <b>Identity Validator (idv.js)</b>
+      </div>
+      <div class="row right">
+        <md-filled-button id="capture-id-button" style="display: none;">
+          Capture ID
+          <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="10" width="36" height="28" rx="2" ry="2" stroke="currentColor" fill="none" />
+            <circle cx="16" cy="24" r="4" stroke="currentColor" />
+            <line x1="26" y1="18" x2="38" y2="18" stroke="currentColor" />
+            <line x1="26" y1="24" x2="38" y2="24" stroke="currentColor" />
+            <line x1="26" y1="30" x2="38" y2="30" stroke="currentColor" />
+          </svg>
+        </md-filled-button>
+        <md-filled-button id="selfie-verification-button" style="display: none;">
+          Selfie Verification
+          <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 6H6v8M6 38v4h8M38 42h4v-8M42 10V6h-8" stroke="currentColor" />
+            <circle cx="24" cy="24" r="10" stroke="currentColor" />
+            <circle cx="20" cy="22" r="1.5" fill="currentColor" />
+            <circle cx="28" cy="22" r="1.5" fill="currentColor" />
+            <path d="M20 28c1.5 2 6.5 2 8 0" stroke="currentColor" stroke-linecap="round" />
+          </svg>
+        </md-filled-button>
+        <md-outlined-button id="init-js-btn">Initialize JS Library</md-outlined-button>
+      </div>
     </div>
   </div>
   <div id="jsoneditor" class="result"></div>
