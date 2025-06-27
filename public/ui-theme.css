@@ -17,9 +17,14 @@ body {
   --md-elevation-level: 3;
 }
 
-.config-form {
+.configuration-form,
+.result {
   min-width: 360px;
   max-width: 768px;
+}
+
+.result {
+  padding: 26px;
 }
 
 .toggler {
