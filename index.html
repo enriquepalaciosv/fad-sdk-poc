@@ -71,6 +71,7 @@
       const validator = new IdentityValidator({
         captureIdContainerId: 'capture-id-button',
         selfieVerificationContainerId: 'selfie-verification-button',
+        environment: document.getElementById('config-environment').selected ? 'production' : 'development',
         fadAppName: document.getElementById('config-fad-app-name').value,
         fadToken: document.getElementById('config-fad-token').value,
         api_url: document.getElementById('config-api-url').value,

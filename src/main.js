@@ -29,6 +29,24 @@ class IdentityValidator {
    * @param {ValidatorOptions} options
    */
   constructor(options) {
+    const requiredOptions = [
+      "environment",
+      "fadAppName",
+      "fadToken",
+      "captureIdContainerId",
+      "selfieVerificationContainerId",
+      "api_url",
+      "business_unit",
+      "customer_guid",
+      "onCaptureIdComplete",
+      "onSelfieVerificationComplete",
+    ];
+    const missing = requiredOptions.filter((opt) => !options[opt]);
+    if (missing.length > 0) {
+      throw new Error(
+        `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
+      );
+    }
     this.options = options;
   }
 
