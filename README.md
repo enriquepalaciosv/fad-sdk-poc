@@ -62,7 +62,6 @@ validator.renderSelfieVerification();
 | `fadToken`                      | `string`   | Token used to authenticate with FAD services.                                                |
 | `captureIdContainerId`          | `string`   | The ID of the DOM element where the Capture ID button will be rendered.                      |
 | `selfieVerificationContainerId` | `string`   | The ID of the DOM element where the Selfie Verification button will be rendered.             |
-| `api_url`                       | `string`   | The base URL of your backend API to receive verification results.                            |
 | `business_unit`                 | `string`   | Identifier of the business unit initiating the verification.                                 |
 | `customer_guid`                 | `string`   | Unique identifier for the customer being verified.                                           |
 | `onCaptureIdComplete`           | `function` | Callback triggered upon completion of the Capture ID verification. Receives a result object. |
