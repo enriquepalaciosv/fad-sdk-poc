@@ -43,7 +43,7 @@ const validator = new IdentityValidator({
   customer_guid: "cust-xxxxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxx",
   onCaptureIdComplete: (result) => {
     console.log("Capture ID completed:", result);
-    // Implement you actual logic to handle the callback result e.g extracting the transaction_guid
+    // Implement your actual logic to handle the callback result e.g extracting the transaction_guid
   },
   onSelfieVerificationComplete: (result) => {
     console.log("Selfie verification completed:", result);
