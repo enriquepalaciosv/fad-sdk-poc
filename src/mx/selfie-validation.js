@@ -50,7 +50,6 @@ async function initSelfieValidation(options) {
       onSelfieVerificationComplete({ sdkResult: result });
     }
   } catch (err) {
-    console.error(err);
     console.error("Error during Facetec live:", err);
     onSelfieVerificationComplete({ sdkResult: err });
   } finally {
