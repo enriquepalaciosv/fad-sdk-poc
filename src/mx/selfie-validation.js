@@ -1,4 +1,4 @@
-import { getSdkInstance, FACETEC_PROCESS_TYPE } from "./fadSdk";
+import { getSdkInstance, FACETEC_PROCESS_TYPE } from "./fad-sdk";
 
 export function setupSelfieValidation(options) {
   const { selfieVerificationContainerId } = options;

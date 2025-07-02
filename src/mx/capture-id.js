@@ -1,4 +1,7 @@
-import { getSdkInstance } from "./fadSdk";
+import { getSdkInstance } from "./fad-sdk";
+import { postData } from "./api-service";
+import { getField } from "./utils";
+import { v4 as uuidv4 } from "uuid";
 
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
@@ -15,32 +18,53 @@ async function initCapture(options) {
     const result = await fadSDK.startCaptureId();
     const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
-      // TODO: send returned data to rails
-      console.log(data);
+      const endpoint = `mx/id/results`;
+      const allFields = data.ocr.fields;
+      const payload = {
+        reference_id: uuidv4(),
+        customer_guid: options.customer_guid,
+        business_unit: options.business_unit,
+        capture_result: {
+          images: {
+            front: data.image.front.data,
+            back: data.image.back.data,
+          },
+          first_name: getField(allFields, "Given Names"),
+          paternal_last_name: getField(allFields, "Surname"),
+          maternal_last_name: getField(allFields, "Second Surname"),
+          gender: getField(allFields, "Sex"),
+          address1: getField(allFields, "Address Street"),
+          curp_number: getField(allFields, "Personal Number"),
+          ine_number: getField(allFields, "Document Number"),
+          dob: getField(allFields, "Date of Birth"),
+          city: getField(allFields, "Address Colony"),
+          province_code: getField(allFields, "Address Postal Code"),
+          voter_key: getField(allFields, "Voter Key"),
+          /**
+           * RFC is a Mexican tax identification number.
+           * It is composed of the first 10 characters of the CURP (Clave Única de Registro de Población)
+           * Followed by a 3-character  "homoclave" that is not available in the OCR data.
+           * The "homoclave" is a unique identifier assigned by the tax authority to avoid duplicates.
+           * The "homoclave" can be found in a document called "constacia de situación fiscal".
+           * In this case, we are using only the first 10 characters of the CURP.
+           * Reference: NA-AT tech team and https://www.sat.gob.mx/consulta/70072/clave-para-el-registro-federal-de-contribuyentes-rfc
+           */
+          rfc: `${getField(allFields, "Personal Number")}`.substring(0, 10),
+        },
+      };
+      postData(environment, endpoint, payload)
+        .then((response) => {
+          onCaptureIdComplete({ sdkResult: result, apiResult: response });
+        })
+        .catch((error) => {
+          onCaptureIdComplete({ sdkResult: result, apiResult: error });
+        });
+    } else {
+      onCaptureIdComplete({ sdkResult: result });
     }
-    onCaptureIdComplete(result);
   } catch (err) {
-    switch (err.code) {
-      case fadSDK.Errors.CaptureId.NOT_READABLE_CAMERA:
-        console.log("Webcam or mic is not ready");
-        break;
-      case fadSDK.Errors.CaptureId.FAIL_GET_OCR:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.VIDEO_PLAYING_ERROR:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.MODEL_FAILED:
-        console.log("restart component");
-        break;
-      case fadSDK.Errors.CaptureId.TF_LITE_ERROR:
-        console.log("restart component");
-        break;
-      default:
-        console.error(JSON.stringify(err));
-        break;
-    }
-    onCaptureIdComplete(err);
+    console.error("Error during ID capture:", err);
+    onCaptureIdComplete({ sdkResult: err });
   } finally {
     fadSDK.end();
   }

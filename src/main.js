@@ -13,8 +13,7 @@ import { setupSelfieValidation } from "./mx/selfie-validation.js";
  * @property {string} fadAppName - The app name registered in FAD ecosystem.
  * @property {string} fadToken - The Token to authenticate against FAD ecosystem.
  * @property {string} captureIdContainerId - The DOM element ID to render the Capture ID button.
- * @property {string} selfieVerificationContainerId - The DOM element ID to render the Selfie Verification button.
- * @property {string} api_url - The base URL of the API to send verification results to.
+ * @property {string} selfieVerificationContainerId - The DOM element ID to render the Selfie Verification button. 
  * @property {string} business_unit - The business unit identifier.
  * @property {string} customer_guid - The unique identifier for the customer.
  * @property {VerificationCallback} onCaptureIdComplete - Called when ID card verification is done.
