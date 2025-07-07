@@ -1,7 +1,8 @@
 export async function postData(env, endpoint, data) {
   try {
-    // TODO: setup real URLs when backend is ready, for now we use localhost
-    const host = env === "production" ? "" : "http://localhost:3017";
+    const sandboxApi = "https://id-validation.sandbox.acima.in";
+    const prodApi = "https://id-validation.acima.com"; // This might change
+    const host = env === "production" ? prodApi : sandboxApi;
     const url = `${host}/${endpoint}`;
     const response = await fetch(url, {
       method: "POST",
