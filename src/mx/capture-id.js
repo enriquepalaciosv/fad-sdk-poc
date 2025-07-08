@@ -19,7 +19,7 @@ async function initCapture(options) {
     const result = await fadSDK.startCaptureId();
     const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
-      const url = `${options.api_url}/mx/id/results`;
+      const endpoint = `mx/id/results`;
       const allFields = data.ocr.fields;
       const payload = {
         reference_id: uuidv4(),
@@ -53,7 +53,7 @@ async function initCapture(options) {
           rfc: `${getField(allFields, "Personal Number")}`.substring(0, 10),
         },
       };
-      postData(url, payload)
+      postData(environment, endpoint, payload)
         .then((response) => {
           onCaptureIdComplete({ sdkResult: result, apiResult: response });
         })

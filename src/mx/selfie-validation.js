@@ -27,7 +27,7 @@ async function initSelfieValidation(options) {
     const result = await fadSDK.startFacetec(null, {}, MW_CONFIG);
     const { event, data } = result;
     if (event === "PROCESS_COMPLETED") {
-      const url = `${options.api_url}/mx/likeness/results`;
+      const endpoint = "mx/likeness/results";
       const payload = {
         reference_id: uuidv4(),
         transaction_guid: options.transaction_guid,
@@ -36,7 +36,7 @@ async function initSelfieValidation(options) {
         likeness_results: data,
         return_images: ["front", "back", "face"],
       };
-      postData(url, payload)
+      postData(environment, endpoint, payload)
         .then((response) => {
           onSelfieVerificationComplete({
             sdkResult: result,
