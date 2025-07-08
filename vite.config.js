@@ -7,10 +7,10 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       open: true,
-      // https: {
-      //   key: fs.readFileSync("localhost-key.pem"),
-      //   cert: fs.readFileSync("localhost-cert.pem"),
-      // },
+      https: {
+        key: fs.readFileSync("localhost-key.pem"),
+        cert: fs.readFileSync("localhost-cert.pem"),
+      },
     },
     build: {
       lib: {
