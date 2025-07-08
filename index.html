@@ -21,8 +21,7 @@
         <md-switch id="config-environment"></md-switch>
       </label>
     </div>
-    <div class="row responsive">
-      <md-outlined-text-field id="config-api-url" label="API URL"></md-outlined-text-field>
+    <div class="row responsive">      
       <md-outlined-select id="config-business-unit" label="Business Unit" value="rac">
         <md-select-option value="acima">
           <div slot="headline">acima</div>
@@ -80,8 +79,7 @@
         selfieVerificationContainerId: 'selfie-verification-button',
         environment: document.getElementById('config-environment').selected ? 'production' : 'development',
         fadAppName: document.getElementById('config-fad-app-name').value,
-        fadToken: document.getElementById('config-fad-token').value,
-        api_url: document.getElementById('config-api-url').value,
+        fadToken: document.getElementById('config-fad-token').value,        
         business_unit: document.getElementById('config-business-unit').value,
         customer_guid: document.getElementById('config-customer-guid').value,
         transaction_guid: document.getElementById('config-transaction-guid').value,
@@ -137,13 +135,11 @@
       }
     }
     function setEnvValues(env) {
-      if (env === 'production') {
-        document.getElementById('config-api-url').value = '';
+      if (env === 'production') {        
         document.getElementById('config-fad-token').value = '';
         document.getElementById('config-customer-guid').value = '';
         document.getElementById('config-transaction-guid').value = '';
-      } else {
-        document.getElementById('config-api-url').value = 'http://localhost:3017';
+      } else {        
         document.getElementById('config-fad-token').value = 'WVFDSTdGclFBWEt4TytScXpNS1NtdGZtMnhBQU1FWEdkSzMrNFpMMmFVaHR2Mk4xYTVhdmQxS0cvTm5BV2VUbzBVemdOMEQ4UVhyRjV1elFsMFJEaFNXWTBjWTRBSStrMG5IZDQzUjZRZEtVMFBkaWJkOXFQZFBsYUdsbmQram0=';
         document.getElementById('config-customer-guid').value = 'cust-0892b27c-52ef-4619-8222-e499d1405c01';
         document.getElementById('config-transaction-guid').value = '';
@@ -173,7 +169,7 @@
       showFlowButtons(false);
     });
 
-    document.querySelectorAll('#config-api-url, #config-fad-app-name, #config-fad-token, #config-customer-guid, #config-transaction-guid').forEach(function (element) {
+    document.querySelectorAll('#config-fad-app-name, #config-fad-token, #config-customer-guid, #config-transaction-guid').forEach(function (element) {
       let lastValue = element.value;
       element.addEventListener('keyup', function (event) {
         const ignoredKeys = [
