@@ -30,7 +30,7 @@ async function initCapture(options) {
             front: data.image.front.data,
             back: data.image.back.data,
           },
-          first_name: getField(allFields, "Given Names"),
+          given_names: getField(allFields, "Given Names"),
           paternal_last_name: getField(allFields, "Surname"),
           maternal_last_name: getField(allFields, "Second Surname"),
           gender: getField(allFields, "Sex"),
@@ -40,7 +40,14 @@ async function initCapture(options) {
           dob: getField(allFields, "Date of Birth"),
           city: getField(allFields, "Address Colony"),
           province_code: getField(allFields, "Address Postal Code"),
+          cic: getField(allFields, "Document Number"),
+          ocr: getField(allFields, "OCR Number"),
           voter_key: getField(allFields, "Voter Key"),
+          verification_number: getField(allFields, "Verification Number"),
+          date_of_issue: getField(allFields, "Date of Issue"),
+          year_of_registration: getField(allFields, "Year of Registration"),
+          citizen_id: getField(allFields, "OCR Number").substring(0, 9),
+          rfc: `${getField(allFields, "Personal Number")}`.substring(0, 10),
           /**
            * RFC is a Mexican tax identification number.
            * It is composed of the first 10 characters of the CURP (Clave Única de Registro de Población)
@@ -50,7 +57,6 @@ async function initCapture(options) {
            * In this case, we are using only the first 10 characters of the CURP.
            * Reference: NA-AT tech team and https://www.sat.gob.mx/consulta/70072/clave-para-el-registro-federal-de-contribuyentes-rfc
            */
-          rfc: `${getField(allFields, "Personal Number")}`.substring(0, 10),
         },
       };
       postData(environment, endpoint, payload)
