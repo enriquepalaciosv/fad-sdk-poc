@@ -1,6 +1,7 @@
 import "../ui-components.js";
 import { setupCaptureID } from "./mx/capture-id.js";
 import { setupSelfieValidation } from "./mx/selfie-validation.js";
+import { initRollbar } from "./utils/rollbar-service.js";
 
 /**
  * @callback VerificationCallback
@@ -33,7 +34,7 @@ class IdentityValidator {
       "fadAppName",
       "fadToken",
       "captureIdContainerId",
-      "selfieVerificationContainerId",      
+      "selfieVerificationContainerId",
       "business_unit",
       "customer_guid",
       "onCaptureIdComplete",
@@ -46,6 +47,7 @@ class IdentityValidator {
       );
     }
     this.options = options;
+    initRollbar({ environment: options.environment });
   }
 
   /**

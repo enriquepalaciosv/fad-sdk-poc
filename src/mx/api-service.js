@@ -1,3 +1,5 @@
+import { getRollbar } from "../utils/rollbar-service.js";
+
 export async function postData(env, endpoint, data) {
   const MAX_SECONDS = 3;
   const controller = new AbortController();
@@ -20,23 +22,43 @@ export async function postData(env, endpoint, data) {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      return {
+      const errorObj = {
         error: "Id Validation Service API did not return OK [200]",
         status: response.status,
+        endpoint,
+        data,
       };
+      const rollbar = getRollbar();
+      if (rollbar) {
+        rollbar.error("API response not OK", errorObj);
+      }
+      return errorObj;
     }
 
     return await response.json();
   } catch (error) {
     console.error("Error posting data:", error);
+    const rollbar = getRollbar();
     if (error.name === "AbortError") {
-      return {
+      const errorObj = {
         error: `Id Validation Service API timed out after ${MAX_SECONDS} seconds`,
+        endpoint,
+        data,
       };
+      if (rollbar) {
+        rollbar.error("API request timed out", errorObj);
+      }
+      return errorObj;
     }
-    return {
+    const errorObj = {
       error: "Unexpected error with Id Validation Service API",
       message: error.message,
+      endpoint,
+      data,
     };
+    if (rollbar) {
+      rollbar.error("Unexpected API error", errorObj);
+    }
+    return errorObj;
   }
 }

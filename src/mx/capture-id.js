@@ -2,6 +2,7 @@ import { getSdkInstance } from "./fad-sdk";
 import { postData } from "./api-service";
 import { getField } from "./utils";
 import { v4 as uuidv4 } from "uuid";
+import { getRollbar } from "../utils/rollbar-service.js";
 
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
@@ -64,6 +65,10 @@ async function initCapture(options) {
           onCaptureIdComplete({ sdkResult: result, apiResult: response });
         })
         .catch((error) => {
+          const rollbar = getRollbar();
+          if (rollbar) {
+            rollbar.error("Error in postData during ID capture", { error, sdkResult: result, payload });
+          }
           onCaptureIdComplete({ sdkResult: result, apiResult: error });
         });
     } else {
@@ -71,6 +76,10 @@ async function initCapture(options) {
     }
   } catch (err) {
     console.error("Error during ID capture:", err);
+    const rollbar = getRollbar();
+    if (rollbar) {
+      rollbar.error("Exception during ID capture", { error: err, options });
+    }
     onCaptureIdComplete({ sdkResult: err });
   } finally {
     fadSDK.end();

@@ -1,6 +1,7 @@
 import { getSdkInstance, FACETEC_PROCESS_TYPE } from "./fad-sdk";
 import { postData } from "./api-service";
 import { v4 as uuidv4 } from "uuid";
+import { getRollbar } from "../utils/rollbar-service.js";
 
 export function setupSelfieValidation(options) {
   const { selfieVerificationContainerId } = options;
@@ -44,6 +45,10 @@ async function initSelfieValidation(options) {
           });
         })
         .catch((error) => {
+          const rollbar = getRollbar();
+          if (rollbar) {
+            rollbar.error("Error in postData during selfie validation", { error, sdkResult: result, payload });
+          }
           onSelfieVerificationComplete({ sdkResult: result, apiResult: error });
         });
     } else {
@@ -51,6 +56,10 @@ async function initSelfieValidation(options) {
     }
   } catch (err) {
     console.error("Error during Facetec live:", err);
+    const rollbar = getRollbar();
+    if (rollbar) {
+      rollbar.error("Exception during Facetec live", { error: err, options });
+    }
     onSelfieVerificationComplete({ sdkResult: err });
   } finally {
     fadSDK.end();
