@@ -67,7 +67,7 @@ async function initCapture(options) {
         .catch((error) => {
           const rollbar = getRollbar();
           if (rollbar) {
-            rollbar.error("Error in postData during ID capture", { error, sdkResult: result, payload });
+            rollbar.error("Error in postData during ID capture", { error });
           }
           onCaptureIdComplete({ sdkResult: result, apiResult: error });
         });
@@ -78,7 +78,7 @@ async function initCapture(options) {
     console.error("Error during ID capture:", err);
     const rollbar = getRollbar();
     if (rollbar) {
-      rollbar.error("Exception during ID capture", { error: err, options });
+      rollbar.error("Exception during ID capture", { error: err });
     }
     onCaptureIdComplete({ sdkResult: err });
   } finally {

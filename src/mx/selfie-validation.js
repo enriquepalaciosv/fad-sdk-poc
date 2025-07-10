@@ -47,7 +47,7 @@ async function initSelfieValidation(options) {
         .catch((error) => {
           const rollbar = getRollbar();
           if (rollbar) {
-            rollbar.error("Error in postData during selfie validation", { error, sdkResult: result, payload });
+            rollbar.error("Error in postData during selfie validation", { error });
           }
           onSelfieVerificationComplete({ sdkResult: result, apiResult: error });
         });
@@ -58,7 +58,7 @@ async function initSelfieValidation(options) {
     console.error("Error during Facetec live:", err);
     const rollbar = getRollbar();
     if (rollbar) {
-      rollbar.error("Exception during Facetec live", { error: err, options });
+      rollbar.error("Exception during Facetec live", { error: err });
     }
     onSelfieVerificationComplete({ sdkResult: err });
   } finally {

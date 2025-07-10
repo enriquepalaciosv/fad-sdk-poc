@@ -26,7 +26,6 @@ export async function postData(env, endpoint, data) {
         error: "Id Validation Service API did not return OK [200]",
         status: response.status,
         endpoint,
-        data,
       };
       const rollbar = getRollbar();
       if (rollbar) {
@@ -43,7 +42,6 @@ export async function postData(env, endpoint, data) {
       const errorObj = {
         error: `Id Validation Service API timed out after ${MAX_SECONDS} seconds`,
         endpoint,
-        data,
       };
       if (rollbar) {
         rollbar.error("API request timed out", errorObj);
@@ -54,7 +52,6 @@ export async function postData(env, endpoint, data) {
       error: "Unexpected error with Id Validation Service API",
       message: error.message,
       endpoint,
-      data,
     };
     if (rollbar) {
       rollbar.error("Unexpected API error", errorObj);
