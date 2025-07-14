@@ -11,6 +11,10 @@ npm install
 ```
 
 ```
+openssl req -x509 -newkey rsa:2048 -nodes -keyout localhost-key.pem -out localhost-cert.pem -days 365 -subj "/CN=localhost"
+```
+
+```
 npm run dev
 ```
 
@@ -39,12 +43,15 @@ const validator = new IdentityValidator({
   selfieVerificationContainerId: "selfie-button",
   api_url: "https://racbackend.com",
   business_unit: "acima",
+  transaction_guid: "your_transaction_guid",
   customer_guid: "cust-xxxxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxx",
   onCaptureIdComplete: (result) => {
     console.log("Capture ID completed:", result);
+    // Implement your actual logic to handle the callback result e.g extracting the transaction_guid
   },
   onSelfieVerificationComplete: (result) => {
     console.log("Selfie verification completed:", result);
+    // Implement you actual logic to handle the callback result
   },
 });
 
@@ -53,7 +60,41 @@ validator.renderCaptureId();
 validator.renderSelfieVerification();
 ```
 
+## 📝 Customizing the Capture ID Button
+
+When you call `renderCaptureId()`, a button will be automatically injected into the DOM element whose ID you provide as `captureIdContainerId`. This button will have the ID `idvjs-capture-id-btn`, allowing you to easily target and style it with your own CSS or JavaScript to match your application's UI requirements.
+
+For example, you can customize its appearance in your CSS:
+
+```css
+#idvjs-capture-id-btn {
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  /* Add your custom styles here */
+}
+```
+
+## 📝 Customizing the Selfie Verification Button
+
+When you call `renderSelfieVerification()`, a button will be automatically injected into the DOM element whose ID you provide as `selfieVerificationContainerId`. This button will have the ID `idvjs-selfie-btn`, allowing you to easily target and style it with your own CSS or JavaScript to match your application's UI requirements.
+
+For example, you can customize its appearance in your CSS:
+
+```css
+#idvjs-selfie-btn {
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  /* Add your custom styles here */
+}
+```
+
 ## 🧾 Options
+
+**All properties in the table below are required.**
+
+**Note:** The `transaction_guid` option is typically obtained after a successful Capture ID flow and may be provided dynamically when initializing or updating the validator instance.
 
 | Property                        | Type       | Description                                                                                  |
 | ------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
@@ -63,6 +104,7 @@ validator.renderSelfieVerification();
 | `captureIdContainerId`          | `string`   | The ID of the DOM element where the Capture ID button will be rendered.                      |
 | `selfieVerificationContainerId` | `string`   | The ID of the DOM element where the Selfie Verification button will be rendered.             |
 | `business_unit`                 | `string`   | Identifier of the business unit initiating the verification.                                 |
+| `transaction_guid`              | `string`   | Unique identifier returned by the api after the capture id flow has been processed.          |
 | `customer_guid`                 | `string`   | Unique identifier for the customer being verified.                                           |
 | `onCaptureIdComplete`           | `function` | Callback triggered upon completion of the Capture ID verification. Receives a result object. |
 | `onSelfieVerificationComplete`  | `function` | Callback triggered upon completion of the Selfie verification. Receives a result object.     |

@@ -1,9 +1,17 @@
+import fs from "fs";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => {
   const isProduction = mode === "production";
 
   return {
+    server: {
+      open: true,
+      https: {
+        key: fs.readFileSync("localhost-key.pem"),
+        cert: fs.readFileSync("localhost-cert.pem"),
+      },
+    },
     build: {
       lib: {
         entry: "src/main.js",
@@ -17,7 +25,7 @@ export default defineConfig(({ mode }) => {
           globals: {},
         },
       },
-    },
+    },    
     plugins: [
       {
         name: "html-transform",

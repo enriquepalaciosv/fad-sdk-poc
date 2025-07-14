@@ -4,14 +4,19 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build && node copy-index.js"
+    ,
+    "lint": "eslint --fix src ui-components.js copy-index.js"
   },
   "devDependencies": {
     "vite": "^6.3.5"
+    ,
+    "eslint": "^8.0.0"
   },
   "dependencies": {
     "@fad-producto/fad-sdk": "^2.1.0",
+    "@material/web": "^2.3.0",
     "uuid": "^11.1.0"
   }
 }

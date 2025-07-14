@@ -3,121 +3,184 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/jsoneditor@9.10.0/dist/jsoneditor.min.css" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsoneditor@9.10.0/dist/jsoneditor.min.css">
+  <link rel="stylesheet" href="/ui-theme.css">
   <script src="https://cdn.jsdelivr.net/npm/jsoneditor@9.10.0/dist/jsoneditor.min.js"></script>
-  <style>
-    :root {
-      font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-      line-height: 1.5;
-      font-weight: 400;
-      color-scheme: light dark;
-      color: rgba(255, 255, 255, 0.87);
-      background-color: #242424;
-      font-synthesis: none;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-
-    body {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      place-items: center;
-      justify-content: center;
-      min-width: 320px;
-      min-height: 100vh;
-    }
-
-    .buttons {
-      padding: 2em;
-      display: flex;
-      gap: 1em;
-    }
-
-    button {
-      border-radius: 8px;
-      border: 1px solid transparent;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      font-weight: 500;
-      font-family: inherit;
-      background-color: #1a1a1a;
-      cursor: pointer;
-      transition: border-color 0.25s;
-    }
-
-    button:hover {
-      border-color: #646cff;
-    }
-
-    button:focus,
-    button:focus-visible {
-      outline: 4px auto -webkit-focus-ring-color;
-    }
-
-    @media (prefers-color-scheme: light) {
-      :root {
-        color: #213547;
-        background: linear-gradient(to top, #305a82, #5a94cb);
-      }
-
-      button {
-        background-color: #f9f9f9;
-      }
-    }
-
-    .result {
-      height: 500px;
-      width: 400px;
-      margin: 1em;
-      text-align: center;
-    }
-  </style>
   <title>Identity Validator JS</title>
 </head>
 
 <body>
-  <div class="buttons">
-    <div id="capture-id-button"></div>
-    <div id="selfie-verification-button"></div>
+
+  <div class="surface configuration-form">
+    <md-elevation></md-elevation>
+    <div class="row responsive">
+      <label class="toggler">
+        Production
+        <md-switch id="config-environment"></md-switch>
+      </label>
+    </div>
+    <div class="row responsive">      
+      <md-outlined-select id="config-business-unit" label="Business Unit" value="rac">
+        <md-select-option value="acima">
+          <div slot="headline">acima</div>
+        </md-select-option>
+        <md-select-option selected value="rac">
+          <div slot="headline">rac</div>
+        </md-select-option>
+      </md-outlined-select>
+      <md-outlined-text-field id="config-fad-app-name" label="FAD App Name" value="rac"></md-outlined-text-field>
+    </div>
+    <div class="row responsive">
+      <md-outlined-text-field id="config-fad-token" label="FAD Token"></md-outlined-text-field>
+      <md-outlined-text-field id="config-customer-guid" label="Customer GUID"></md-outlined-text-field>
+      <md-outlined-text-field id="config-transaction-guid" label="Transaction GUID"></md-outlined-text-field>
+    </div>
+
+
+    <div class="row space-between responsive">
+      <div class="row">
+        <b>Identity Validator (idv.js)</b>
+      </div>
+      <div class="row right">
+        <md-filled-button id="capture-id-button" style="display: none;">
+          Capture ID
+          <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="10" width="36" height="28" rx="2" ry="2" stroke="currentColor" fill="none" />
+            <circle cx="16" cy="24" r="4" stroke="currentColor" />
+            <line x1="26" y1="18" x2="38" y2="18" stroke="currentColor" />
+            <line x1="26" y1="24" x2="38" y2="24" stroke="currentColor" />
+            <line x1="26" y1="30" x2="38" y2="30" stroke="currentColor" />
+          </svg>
+        </md-filled-button>
+        <md-filled-button id="selfie-verification-button" style="display: none;">
+          Selfie Verification
+          <svg slot="icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 6H6v8M6 38v4h8M38 42h4v-8M42 10V6h-8" stroke="currentColor" />
+            <circle cx="24" cy="24" r="10" stroke="currentColor" />
+            <circle cx="20" cy="22" r="1.5" fill="currentColor" />
+            <circle cx="28" cy="22" r="1.5" fill="currentColor" />
+            <path d="M20 28c1.5 2 6.5 2 8 0" stroke="currentColor" stroke-linecap="round" />
+          </svg>
+        </md-filled-button>
+        <md-outlined-button id="init-js-btn">Initialize JS Library</md-outlined-button>
+      </div>
+    </div>
   </div>
   <div id="jsoneditor" class="result"></div>
 
   <script type="module" src="%SCRIPT_SRC%"></script>
-  <script>
-    if (typeof window !== 'undefined') {
 
-      const renderResult = (result) => {
-        const container = document.getElementById("jsoneditor");
-        container.innerHTML = "";
-        const options = { mode: "view" };
-        const editor = new JSONEditor(container, options);
-        editor.set(result);
-      }
-
-      window.addEventListener('DOMContentLoaded', () => {
-        const validator = new IdentityValidator({
-          fadAppName: 'rac',
-          fadToken: 'WVFDSTdGclFBWEt4TytScXpNS1NtdGZtMnhBQU1FWEdkSzMrNFpMMmFVaHR2Mk4xYTVhdmQxS0cvTm5BV2VUbzBVemdOMEQ4UVhyRjV1elFsMFJEaFNXWTBjWTRBSStrMG5IZDQzUjZRZEtVMFBkaWJkOXFQZFBsYUdsbmQram0=',
-          captureIdContainerId: 'capture-id-button',
-          selfieVerificationContainerId: 'selfie-verification-button',          
-          business_unit: 'acima',
-          customer_guid: 'cust-0892b27c-52ef-4619-8222-e499d1405c01',
-          onCaptureIdComplete: function (result) {
-            renderResult(result);
-          },
-          onSelfieVerificationComplete: function (result) {
-            renderResult(result);
-          },
-        });
-        validator.renderCaptureId();
-        validator.renderSelfieVerification();
+  <script type="text/javascript">
+    function initJsLibrary() {
+      const validator = new IdentityValidator({
+        captureIdContainerId: 'capture-id-button',
+        selfieVerificationContainerId: 'selfie-verification-button',
+        environment: document.getElementById('config-environment').selected ? 'production' : 'development',
+        fadAppName: document.getElementById('config-fad-app-name').value,
+        fadToken: document.getElementById('config-fad-token').value,        
+        business_unit: document.getElementById('config-business-unit').value,
+        customer_guid: document.getElementById('config-customer-guid').value,
+        transaction_guid: document.getElementById('config-transaction-guid').value,
+        onCaptureIdComplete: function (result) {
+          renderResult(result);
+        },
+        onSelfieVerificationComplete: function (result) {
+          renderResult(result);
+        },
       });
+      validator.renderCaptureId();
+      validator.renderSelfieVerification();
     }
+  </script>
+  <script type="text/javascript">
+    function mergeButtons(btnId, innerBtnId) {
+      document.getElementById(btnId).addEventListener('click', function (event) {
+        const injectedBtn = this.querySelector(`#${innerBtnId}`);
+        if (injectedBtn && event.target === this) {
+          injectedBtn.click();
+        }
+      });
+      const injectedBtn = document.querySelector(`#${innerBtnId}`);
+      if (injectedBtn) {
+        injectedBtn.style.display = 'none';
+      }
+    }
+    function renderResult(result) {
+      const container = document.getElementById("jsoneditor");
+      container.innerHTML = "";
+      const options = { mode: "view" };
+      const editor = new JSONEditor(container, options);
+      editor.set(result);
+    }
+    function showFlowButtons(showButtons) {
+      const verificationButton = document.getElementById('selfie-verification-button');
+      const captureIdButton = document.getElementById('capture-id-button');
+      const initJsBtn = document.getElementById('init-js-btn');
+
+      verificationButton.style.display = showButtons ? 'flex' : 'none';
+      captureIdButton.style.display = showButtons ? 'flex' : 'none';
+      initJsBtn.style.display = showButtons ? 'none' : 'flex';
+
+      if (!showButtons) {
+        const innerCaptureButton = captureIdButton.querySelector('#idvjs-capture-id-btn');
+        if (innerCaptureButton) {
+          innerCaptureButton.remove();
+        }
+        const innerButton = verificationButton.querySelector('#idvjs-selfie-btn');
+        if (innerButton) {
+          innerButton.remove();
+        }
+      }
+    }
+    function setEnvValues(env) {
+      if (env === 'production') {        
+        document.getElementById('config-fad-token').value = '';
+        document.getElementById('config-customer-guid').value = '';
+        document.getElementById('config-transaction-guid').value = '';
+      } else {        
+        document.getElementById('config-fad-token').value = 'WVFDSTdGclFBWEt4TytScXpNS1NtdGZtMnhBQU1FWEdkSzMrNFpMMmFVaHR2Mk4xYTVhdmQxS0cvTm5BV2VUbzBVemdOMEQ4UVhyRjV1elFsMFJEaFNXWTBjWTRBSStrMG5IZDQzUjZRZEtVMFBkaWJkOXFQZFBsYUdsbmQram0=';
+        document.getElementById('config-customer-guid').value = 'cust-0892b27c-52ef-4619-8222-e499d1405c01';
+        document.getElementById('config-transaction-guid').value = '';
+      }
+    }
+  </script>
+  <script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setEnvValues('development');
+    });
+
+    document.getElementById('init-js-btn').addEventListener('click', function () {
+      initJsLibrary();
+      mergeButtons('capture-id-button', 'idvjs-capture-id-btn');
+      mergeButtons('selfie-verification-button', 'idvjs-selfie-btn');
+      showFlowButtons(true);
+    });
+
+    document.getElementById('config-environment').addEventListener('change', function (element) {
+      const env = element.target.selected ? 'production' : 'development';
+      showFlowButtons(false);
+      setEnvValues(env);
+    });
+
+    document.getElementById('config-business-unit').addEventListener('change', function (element) {
+      showFlowButtons(false);
+    });
+
+    document.querySelectorAll('#config-fad-app-name, #config-fad-token, #config-customer-guid, #config-transaction-guid').forEach(function (element) {
+      let lastValue = element.value;
+      element.addEventListener('keyup', function (event) {
+        const ignoredKeys = [
+          'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Escape', 'Enter'
+        ];
+        if (!ignoredKeys.includes(event.key) && element.value !== lastValue) {
+          lastValue = element.value;
+          showFlowButtons(false);
+        }
+      });
+    });
   </script>
 
 </body>
