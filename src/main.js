@@ -1,6 +1,7 @@
 import "../ui-components.js";
 import { setupCaptureID } from "./mx/capture-id.js";
 import { setupSelfieValidation } from "./mx/selfie-validation.js";
+import { initRollbar } from "./utils/rollbar-service.js";
 
 /**
  * @callback VerificationCallback
@@ -17,7 +18,7 @@ import { setupSelfieValidation } from "./mx/selfie-validation.js";
  * @property {string} selfieVerificationContainerId - The DOM element ID to render the Selfie Verification button. 
  * @property {string} business_unit - The business unit identifier.
  * @property {string} customer_guid - The unique identifier for the customer.
- * @property {string} transaction_guid - Unique ID Found in the API response after the Capture ID request is processed, this value is received in the onCaptureIdComplete callback.
+ * @property {string} transaction_id - Unique ID Found in the API response after the Capture ID request is processed, this value is received in the onCaptureIdComplete callback.
  * @property {VerificationCallback} onCaptureIdComplete - Called when ID card verification is done.
  * @property {VerificationCallback} onSelfieVerificationComplete - Called when selfie verification is done.
  */
@@ -33,7 +34,7 @@ class IdentityValidator {
       "fadAppName",
       "fadToken",
       "captureIdContainerId",
-      "selfieVerificationContainerId",      
+      "selfieVerificationContainerId",
       "business_unit",
       "customer_guid",
       "onCaptureIdComplete",
@@ -46,6 +47,7 @@ class IdentityValidator {
       );
     }
     this.options = options;
+    initRollbar({ environment: options.environment });
   }
 
   /**

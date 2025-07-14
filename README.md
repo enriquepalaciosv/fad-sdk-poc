@@ -20,9 +20,22 @@ npm run dev
 
 Open the following url in your browser http://localhost:5173/
 
+## 🚀 Production
+
+To build the project for production, run the following commands in the root directory:
+
+```
+npm install
+npm run build
+```
+
+The production-ready JS library will be generated in `dist/idv.js` you can upload it to a web server, hosting provider or simply copy it to your project.
+
+If you also want to deploy the test page, make sure to upload all the content of the `dist/` folder to a web server or hosting provider.
+
 ## 📦 Installation
 
-Include the compiled JavaScript in your HTML file or import it via module bundler if using modern JS tooling.
+Include the compiled JavaScript library in your HTML file.
 
 ```html
 <script src="path/to/idv.js"></script>
@@ -43,11 +56,11 @@ const validator = new IdentityValidator({
   selfieVerificationContainerId: "selfie-button",
   api_url: "https://racbackend.com",
   business_unit: "acima",
-  transaction_guid: "your_transaction_guid",
+  transaction_id: "your_transaction_id",
   customer_guid: "cust-xxxxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxx",
   onCaptureIdComplete: (result) => {
     console.log("Capture ID completed:", result);
-    // Implement your actual logic to handle the callback result e.g extracting the transaction_guid
+    // Implement your actual logic to handle the callback result e.g extracting the transaction_id
   },
   onSelfieVerificationComplete: (result) => {
     console.log("Selfie verification completed:", result);
@@ -94,7 +107,7 @@ For example, you can customize its appearance in your CSS:
 
 **All properties in the table below are required.**
 
-**Note:** The `transaction_guid` option is typically obtained after a successful Capture ID flow and may be provided dynamically when initializing or updating the validator instance.
+**Note:** The `transaction_id` option is typically obtained after a successful Capture ID flow and may be provided dynamically when initializing or updating the validator instance.
 
 | Property                        | Type       | Description                                                                                  |
 | ------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
@@ -104,7 +117,7 @@ For example, you can customize its appearance in your CSS:
 | `captureIdContainerId`          | `string`   | The ID of the DOM element where the Capture ID button will be rendered.                      |
 | `selfieVerificationContainerId` | `string`   | The ID of the DOM element where the Selfie Verification button will be rendered.             |
 | `business_unit`                 | `string`   | Identifier of the business unit initiating the verification.                                 |
-| `transaction_guid`              | `string`   | Unique identifier returned by the api after the capture id flow has been processed.          |
+| `transaction_id`              | `string`   | Unique identifier returned by the api after the capture id flow has been processed.          |
 | `customer_guid`                 | `string`   | Unique identifier for the customer being verified.                                           |
 | `onCaptureIdComplete`           | `function` | Callback triggered upon completion of the Capture ID verification. Receives a result object. |
 | `onSelfieVerificationComplete`  | `function` | Callback triggered upon completion of the Selfie verification. Receives a result object.     |
