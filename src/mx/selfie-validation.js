@@ -31,7 +31,7 @@ async function initSelfieValidation(options) {
       const endpoint = "mx/likeness/results";
       const payload = {
         reference_id: uuidv4(),
-        transaction_guid: options.transaction_guid,
+        transaction_id: options.transaction_id,
         customer_guid: options.customer_guid,
         business_unit: options.business_unit,
         likeness_results: data,

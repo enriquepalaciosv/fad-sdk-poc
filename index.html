@@ -35,7 +35,7 @@
     <div class="row responsive">
       <md-outlined-text-field id="config-fad-token" label="FAD Token"></md-outlined-text-field>
       <md-outlined-text-field id="config-customer-guid" label="Customer GUID"></md-outlined-text-field>
-      <md-outlined-text-field id="config-transaction-guid" label="Transaction GUID"></md-outlined-text-field>
+      <md-outlined-text-field id="config-transaction-guid" label="Transaction ID"></md-outlined-text-field>
     </div>
 
 
@@ -82,7 +82,7 @@
         fadToken: document.getElementById('config-fad-token').value,        
         business_unit: document.getElementById('config-business-unit').value,
         customer_guid: document.getElementById('config-customer-guid').value,
-        transaction_guid: document.getElementById('config-transaction-guid').value,
+        transaction_id: document.getElementById('config-transaction-guid').value,
         onCaptureIdComplete: function (result) {
           renderResult(result);
         },
