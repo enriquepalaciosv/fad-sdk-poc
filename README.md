@@ -20,9 +20,22 @@ npm run dev
 
 Open the following url in your browser http://localhost:5173/
 
+## 🚀 Production
+
+To build the project for production, run the following commands in the root directory:
+
+```
+npm install
+npm run build
+```
+
+The production-ready JS library will be generated in `dist/idv.js` you can upload it to a web server, hosting provider or simply copy it to your project.
+
+If you also want to deploy the test page, make sure to upload all the content of the `dist/` folder to a web server or hosting provider.
+
 ## 📦 Installation
 
-Include the compiled JavaScript in your HTML file or import it via module bundler if using modern JS tooling.
+Include the compiled JavaScript library in your HTML file.
 
 ```html
 <script src="path/to/idv.js"></script>
