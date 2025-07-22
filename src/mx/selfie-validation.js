@@ -45,7 +45,13 @@ async function initSelfieValidation(options) {
       postData(environment, endpoint, payload)
         .then((response) => {
           onSelfieVerificationComplete({
-            sdkResult: result,
+            sdkResult: {
+              event,
+              base64Images: {
+                lowQuality: data.lowQualityAuditTrail,
+                highQuality: data.auditTrail,
+              },
+            },
             apiResult: response,
           });
         })
@@ -56,18 +62,27 @@ async function initSelfieValidation(options) {
               error,
             });
           }
-          onSelfieVerificationComplete({ sdkResult: result, apiResult: error });
+          onSelfieVerificationComplete({
+            sdkResult: {
+              event,
+              base64Images: {
+                lowQuality: data.lowQualityAuditTrail,
+                highQuality: data.auditTrail,
+              },
+            },
+            apiResult: error,
+          });
         });
     } else {
-      onSelfieVerificationComplete({ sdkResult: result });
+      onSelfieVerificationComplete({ sdkResult: { event } });
     }
-  } catch (err) {
-    console.error("Error during Facetec live:", err);
+  } catch (error) {
+    console.error("Error during Facetec live:", error);
     const rollbar = getRollbar();
     if (rollbar) {
-      rollbar.error("Exception during Facetec live", { error: err });
+      rollbar.error("Exception during Facetec live", { error });
     }
-    onSelfieVerificationComplete({ sdkResult: err });
+    onSelfieVerificationComplete({ message: "Unexpected error", error });
   } finally {
     fadSDK.end();
   }
