@@ -6,6 +6,11 @@ import { getRollbar } from "../utils/rollbar-service.js";
 
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
+  // Remove existing button if present
+  const existingButton = document.getElementById("idvjs-capture-id-btn");
+  if (existingButton) {
+    existingButton.remove();
+  }
   const button = document.createElement("button");
   button.id = "idvjs-capture-id-btn";
   button.textContent = "Capture ID";

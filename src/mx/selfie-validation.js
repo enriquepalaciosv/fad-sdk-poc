@@ -6,6 +6,11 @@ import { getRollbar } from "../utils/rollbar-service.js";
 export function setupSelfieValidation(options) {
   const { selfieVerificationContainerId } = options;
   const container = document.getElementById(selfieVerificationContainerId);
+  // Remove existing button if present
+  const existingButton = document.getElementById("idvjs-selfie-btn");
+  if (existingButton) {
+    existingButton.remove();
+  }
   const button = document.createElement("button");
   button.id = "idvjs-selfie-btn";
   button.textContent = "Selfie Validation";
@@ -47,7 +52,9 @@ async function initSelfieValidation(options) {
         .catch((error) => {
           const rollbar = getRollbar();
           if (rollbar) {
-            rollbar.error("Error in postData during selfie validation", { error });
+            rollbar.error("Error in postData during selfie validation", {
+              error,
+            });
           }
           onSelfieVerificationComplete({ sdkResult: result, apiResult: error });
         });

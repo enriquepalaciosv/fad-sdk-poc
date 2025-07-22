@@ -63,7 +63,7 @@ const validator = new IdentityValidator({
   },
   onSelfieVerificationComplete: (result) => {
     console.log("Selfie verification completed:", result);
-    // Implement you actual logic to handle the callback result
+    // Implement your actual logic to handle the callback result
   },
 });
 
