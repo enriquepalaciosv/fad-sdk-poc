@@ -29,6 +29,14 @@ class IdentityValidator {
    * @param {ValidatorOptions} options
    */
   constructor(options) {
+    this.options = options;
+    initRollbar({ environment: options.environment });
+  }
+
+  /**
+   * Initializes and renders the Caputure ID button inside the provided container.
+   */
+  renderCaptureId() {
     const requiredOptions = [
       "environment",
       "fadAppName",
@@ -40,28 +48,40 @@ class IdentityValidator {
       "onCaptureIdComplete",
       "onSelfieVerificationComplete",
     ];
-    const missing = requiredOptions.filter((opt) => !options[opt]);
+    const missing = requiredOptions.filter((opt) => !this.options[opt]);
     if (missing.length > 0) {
       throw new Error(
         `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
       );
+    } else {
+      setupCaptureID(this.options);
     }
-    this.options = options;
-    initRollbar({ environment: options.environment });
-  }
-
-  /**
-   * Initializes and renders the Caputure ID button inside the provided container.
-   */
-  renderCaptureId() {
-    setupCaptureID(this.options);
   }
 
   /**
    * Initializes and renders the Selfie Verification button inside the provided container.
    */
   renderSelfieVerification() {
-    setupSelfieValidation(this.options);
+    const requiredOptions = [
+      "environment",
+      "fadAppName",
+      "fadToken",
+      "captureIdContainerId",
+      "selfieVerificationContainerId",
+      "business_unit",
+      "customer_guid",
+      "transaction_id",
+      "onCaptureIdComplete",
+      "onSelfieVerificationComplete",
+    ];
+    const missing = requiredOptions.filter((opt) => !this.options[opt]);
+    if (missing.length > 0) {
+      throw new Error(
+        `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
+      );
+    } else {
+      setupSelfieValidation(this.options);
+    }
   }
 }
 
