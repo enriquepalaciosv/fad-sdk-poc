@@ -3,6 +3,23 @@ import { setupCaptureID } from "./mx/capture-id.js";
 import { setupSelfieValidation } from "./mx/selfie-validation.js";
 import { initRollbar } from "./utils/rollbar-service.js";
 
+const REQUIRED_OPTIONS_CAPTURE_ID = [
+  "environment",
+  "fadAppName",
+  "fadToken",
+  "captureIdContainerId",
+  "selfieVerificationContainerId",
+  "business_unit",
+  "customer_guid",
+  "onCaptureIdComplete",
+  "onSelfieVerificationComplete",
+];
+
+const REQUIRED_OPTIONS_SELFIE_VERIFICATION = [
+  ...REQUIRED_OPTIONS_CAPTURE_ID,
+  "transaction_id",
+];
+
 /**
  * @callback VerificationCallback
  * @param {Object} result - The result from the verification process.
@@ -37,18 +54,9 @@ class IdentityValidator {
    * Initializes and renders the Caputure ID button inside the provided container.
    */
   renderCaptureId() {
-    const requiredOptions = [
-      "environment",
-      "fadAppName",
-      "fadToken",
-      "captureIdContainerId",
-      "selfieVerificationContainerId",
-      "business_unit",
-      "customer_guid",
-      "onCaptureIdComplete",
-      "onSelfieVerificationComplete",
-    ];
-    const missing = requiredOptions.filter((opt) => !this.options[opt]);
+    const missing = REQUIRED_OPTIONS_CAPTURE_ID.filter(
+      (opt) => !this.options[opt]
+    );
     if (missing.length > 0) {
       throw new Error(
         `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
@@ -62,19 +70,9 @@ class IdentityValidator {
    * Initializes and renders the Selfie Verification button inside the provided container.
    */
   renderSelfieVerification() {
-    const requiredOptions = [
-      "environment",
-      "fadAppName",
-      "fadToken",
-      "captureIdContainerId",
-      "selfieVerificationContainerId",
-      "business_unit",
-      "customer_guid",
-      "transaction_id",
-      "onCaptureIdComplete",
-      "onSelfieVerificationComplete",
-    ];
-    const missing = requiredOptions.filter((opt) => !this.options[opt]);
+    const missing = REQUIRED_OPTIONS_SELFIE_VERIFICATION.filter(
+      (opt) => !this.options[opt]
+    );
     if (missing.length > 0) {
       throw new Error(
         `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
