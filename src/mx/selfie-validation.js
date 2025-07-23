@@ -6,6 +6,11 @@ import { getRollbar } from "../utils/rollbar-service.js";
 export function setupSelfieValidation(options) {
   const { selfieVerificationContainerId } = options;
   const container = document.getElementById(selfieVerificationContainerId);
+  // Remove existing button if present
+  const existingButton = document.getElementById("idvjs-selfie-btn");
+  if (existingButton) {
+    existingButton.remove();
+  }
   const button = document.createElement("button");
   button.id = "idvjs-selfie-btn";
   button.textContent = "Selfie Validation";
@@ -40,27 +45,44 @@ async function initSelfieValidation(options) {
       postData(environment, endpoint, payload)
         .then((response) => {
           onSelfieVerificationComplete({
-            sdkResult: result,
+            sdkResult: {
+              event,
+              base64Images: {
+                lowQuality: data.lowQualityAuditTrail,
+                highQuality: data.auditTrail,
+              },
+            },
             apiResult: response,
           });
         })
         .catch((error) => {
           const rollbar = getRollbar();
           if (rollbar) {
-            rollbar.error("Error in postData during selfie validation", { error });
+            rollbar.error("Error in postData during selfie validation", {
+              error,
+            });
           }
-          onSelfieVerificationComplete({ sdkResult: result, apiResult: error });
+          onSelfieVerificationComplete({
+            sdkResult: {
+              event,
+              base64Images: {
+                lowQuality: data.lowQualityAuditTrail,
+                highQuality: data.auditTrail,
+              },
+            },
+            apiResult: error,
+          });
         });
     } else {
-      onSelfieVerificationComplete({ sdkResult: result });
+      onSelfieVerificationComplete({ sdkResult: { event } });
     }
-  } catch (err) {
-    console.error("Error during Facetec live:", err);
+  } catch (error) {
+    console.error("Error during Facetec live:", error);
     const rollbar = getRollbar();
     if (rollbar) {
-      rollbar.error("Exception during Facetec live", { error: err });
+      rollbar.error("Exception during Facetec live", { error });
     }
-    onSelfieVerificationComplete({ sdkResult: err });
+    onSelfieVerificationComplete({ message: "Unexpected error", error });
   } finally {
     fadSDK.end();
   }

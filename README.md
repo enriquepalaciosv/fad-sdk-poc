@@ -18,7 +18,7 @@ openssl req -x509 -newkey rsa:2048 -nodes -keyout localhost-key.pem -out localho
 npm run dev
 ```
 
-Open the following url in your browser http://localhost:5173/
+Open the following url in your browser https://localhost:5173 feel free to ignore the warning about using a self-signed certificate, HTTPS is needed for selfie verification.
 
 ## 🚀 Production
 
@@ -29,9 +29,7 @@ npm install
 npm run build
 ```
 
-The production-ready JS library will be generated in `dist/idv.js` you can upload it to a web server, hosting provider or simply copy it to your project.
-
-If you also want to deploy the test page, make sure to upload all the content of the `dist/` folder to a web server or hosting provider.
+The production-ready JS library will be generated in `dist/idv.js` you can upload it to a web server or simply copy it to your project.
 
 ## 📦 Installation
 
@@ -50,21 +48,20 @@ Create a new instance of `IdentityValidator` by passing the required configurati
 ```js
 const validator = new IdentityValidator({
   environment: "development",
-  fadAppName: "acima",
+  fadAppName: "rac",
   fadToken: "xxxxxxxxxxxxxxxxxxx",
   captureIdContainerId: "capture-id-button",
   selfieVerificationContainerId: "selfie-button",
-  api_url: "https://racbackend.com",
-  business_unit: "acima",
+  business_unit: "rac",
   transaction_id: "your_transaction_id",
   customer_guid: "cust-xxxxxx-xxxxx-xxxxxx-xxxxxx-xxxxxxxx",
-  onCaptureIdComplete: (result) => {
-    console.log("Capture ID completed:", result);
-    // Implement your actual logic to handle the callback result e.g extracting the transaction_id
+  onCaptureIdComplete: (caputureIdResult) => {
+    console.log("Capture ID completed:", caputureIdResult);
+    // Implement your logic to handle the callback result e.g extracting the transaction_id
   },
-  onSelfieVerificationComplete: (result) => {
-    console.log("Selfie verification completed:", result);
-    // Implement you actual logic to handle the callback result
+  onSelfieVerificationComplete: (selfieVerificationResult) => {
+    console.log("Selfie verification completed:", selfieVerificationResult);
+    // Implement your logic to handle the callback result
   },
 });
 
@@ -72,6 +69,74 @@ const validator = new IdentityValidator({
 validator.renderCaptureId();
 validator.renderSelfieVerification();
 ```
+
+### caputureIdResult Structure
+
+The `caputureIdResult` object passed to the `onCaptureIdComplete` callback has the following structure:
+
+```json
+{
+  "sdkResult": {
+    "event": "result_message_from_sdk",
+    "customer_guid": "cust-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "business_unit": "rac|acima",
+    "capture_result": {
+      "images": {
+        "front": "front_image_base64_string",
+        "back": "back_image_base64_string"
+      },
+      "ine_number": "ine_number_value",
+      "ocr": "ocr_number_value",
+      "voter_key": "voter_key_value",
+      "verification_number": "verification_number_value",
+      "date_of_issue": "date_of_issue_value",
+      "year_of_registration": "year_of_registration_value",
+      "citizen_id": "citizen_id_value",
+      "dob": "date_of_birth_value",
+      "curp_number": "curp_number_value",
+      "paternal_last_name": "paternal_last_name_value",
+      "maternal_last_name": "maternal_last_name_value",
+      "gender": "gender_value",
+      "given_names": "given_names_value"
+    }
+  },
+  "apiResult": {
+    "transaction_id": "unique guid for the capture results",
+    "status": "OK",
+    "error_message": "message available only if an error occurs"
+  }
+}
+```
+
+### selfieVerificationResult Structure
+
+The `selfieVerificationResult` object passed to the `onSelfieVerificationComplete` callback has the following structure:
+
+```json
+{
+  "sdkResult": {
+    "event": "result_message_from_sdk",
+    "base64Images": {
+      "lowQuality": "low quality base64_string image",
+      "highQuality": "high quality base64_string image"
+    }
+  },
+  "apiResult": {    
+    "matches": {
+      "ine": true,
+      "curp": true,
+      // field_name: true | false
+    },
+    "transaction_id": "transaction_id from the previous Capture ID flow",
+    "customer_guid": "cust-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "images": {
+      "front": "base64 encoded image",
+      "back": "base64 encoded image",
+      "face": "base64 encoded image"
+    }     
+  }
+}
+````
 
 ## 📝 Customizing the Capture ID Button
 
@@ -86,7 +151,7 @@ For example, you can customize its appearance in your CSS:
   border-radius: 4px;
   /* Add your custom styles here */
 }
-```
+````
 
 ## 📝 Customizing the Selfie Verification Button
 
@@ -104,20 +169,17 @@ For example, you can customize its appearance in your CSS:
 ```
 
 ## 🧾 Options
-
-**All properties in the table below are required.**
-
-**Note:** The `transaction_id` option is typically obtained after a successful Capture ID flow and may be provided dynamically when initializing or updating the validator instance.
+All properties in the table below are required, except for `transaction_id`, which is only necessary for the Selfie Verification flow. You can omit `transaction_id` when using the Capture ID flow.
 
 | Property                        | Type       | Description                                                                                  |
 | ------------------------------- | ---------- | -------------------------------------------------------------------------------------------- |
 | `environment`                   | `string`   | The environment to run in. Accepted values: `'development'`, `'production'`.                 |
-| `fadAppName`                    | `string`   | Name of the app as registered in the FAD ecosystem.                                          |
-| `fadToken`                      | `string`   | Token used to authenticate with FAD services.                                                |
+| `fadAppName`                    | `string`   | Name of the app as registered in the FAD ecosystem, provided by NA-AT.                       |
+| `fadToken`                      | `string`   | Token used to authenticate with FAD services, provided by NA-AT.                             |
 | `captureIdContainerId`          | `string`   | The ID of the DOM element where the Capture ID button will be rendered.                      |
 | `selfieVerificationContainerId` | `string`   | The ID of the DOM element where the Selfie Verification button will be rendered.             |
 | `business_unit`                 | `string`   | Identifier of the business unit initiating the verification.                                 |
-| `transaction_id`              | `string`   | Unique identifier returned by the api after the capture id flow has been processed.          |
+| `transaction_id`                | `string`   | Unique identifier returned by the api after the capture id flow has been processed.          |
 | `customer_guid`                 | `string`   | Unique identifier for the customer being verified.                                           |
 | `onCaptureIdComplete`           | `function` | Callback triggered upon completion of the Capture ID verification. Receives a result object. |
 | `onSelfieVerificationComplete`  | `function` | Callback triggered upon completion of the Selfie verification. Receives a result object.     |
@@ -152,4 +214,6 @@ function onVerificationComplete(result) {
 
 ## 🔒 Security
 
-Make sure not to expose sensitive data like the `fadToken` in public repositories.
+- Make sure not to expose sensitive data like the `fadToken` in public repositories.
+
+- This JS library needs HTTPS to properly communicate with NA-AT SDK.

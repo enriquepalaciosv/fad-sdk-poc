@@ -6,6 +6,11 @@ import { getRollbar } from "../utils/rollbar-service.js";
 
 export function setupCaptureID(options) {
   const container = document.getElementById(options.captureIdContainerId);
+  // Remove existing button if present
+  const existingButton = document.getElementById("idvjs-capture-id-btn");
+  if (existingButton) {
+    existingButton.remove();
+  }
   const button = document.createElement("button");
   button.id = "idvjs-capture-id-btn";
   button.textContent = "Capture ID";
@@ -62,25 +67,31 @@ async function initCapture(options) {
       };
       postData(environment, endpoint, payload)
         .then((response) => {
-          onCaptureIdComplete({ sdkResult: result, apiResult: response });
+          onCaptureIdComplete({
+            sdkResult: { event, ...payload },
+            apiResult: response,
+          });
         })
         .catch((error) => {
           const rollbar = getRollbar();
           if (rollbar) {
             rollbar.error("Error in postData during ID capture", { error });
           }
-          onCaptureIdComplete({ sdkResult: result, apiResult: error });
+          onCaptureIdComplete({
+            sdkResult: { event, ...payload },
+            apiResult: error,
+          });
         });
     } else {
-      onCaptureIdComplete({ sdkResult: result });
+      onCaptureIdComplete({ sdkResult: { event } });
     }
-  } catch (err) {
-    console.error("Error during ID capture:", err);
+  } catch (error) {
+    console.error("Error during ID capture:", error);
     const rollbar = getRollbar();
     if (rollbar) {
-      rollbar.error("Exception during ID capture", { error: err });
+      rollbar.error("Exception during ID capture", { error });
     }
-    onCaptureIdComplete({ sdkResult: err });
+    onCaptureIdComplete({ message: "Unexpected error", error });
   } finally {
     fadSDK.end();
   }

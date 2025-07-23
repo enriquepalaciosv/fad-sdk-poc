@@ -3,6 +3,23 @@ import { setupCaptureID } from "./mx/capture-id.js";
 import { setupSelfieValidation } from "./mx/selfie-validation.js";
 import { initRollbar } from "./utils/rollbar-service.js";
 
+const REQUIRED_OPTIONS_CAPTURE_ID = [
+  "environment",
+  "fadAppName",
+  "fadToken",
+  "captureIdContainerId",
+  "selfieVerificationContainerId",
+  "business_unit",
+  "customer_guid",
+  "onCaptureIdComplete",
+  "onSelfieVerificationComplete",
+];
+
+const REQUIRED_OPTIONS_SELFIE_VERIFICATION = [
+  ...REQUIRED_OPTIONS_CAPTURE_ID,
+  "transaction_id",
+];
+
 /**
  * @callback VerificationCallback
  * @param {Object} result - The result from the verification process.
@@ -29,23 +46,6 @@ class IdentityValidator {
    * @param {ValidatorOptions} options
    */
   constructor(options) {
-    const requiredOptions = [
-      "environment",
-      "fadAppName",
-      "fadToken",
-      "captureIdContainerId",
-      "selfieVerificationContainerId",
-      "business_unit",
-      "customer_guid",
-      "onCaptureIdComplete",
-      "onSelfieVerificationComplete",
-    ];
-    const missing = requiredOptions.filter((opt) => !options[opt]);
-    if (missing.length > 0) {
-      throw new Error(
-        `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
-      );
-    }
     this.options = options;
     initRollbar({ environment: options.environment });
   }
@@ -54,14 +54,32 @@ class IdentityValidator {
    * Initializes and renders the Caputure ID button inside the provided container.
    */
   renderCaptureId() {
-    setupCaptureID(this.options);
+    const missing = REQUIRED_OPTIONS_CAPTURE_ID.filter(
+      (opt) => !this.options[opt]
+    );
+    if (missing.length > 0) {
+      throw new Error(
+        `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
+      );
+    } else {
+      setupCaptureID(this.options);
+    }
   }
 
   /**
    * Initializes and renders the Selfie Verification button inside the provided container.
    */
   renderSelfieVerification() {
-    setupSelfieValidation(this.options);
+    const missing = REQUIRED_OPTIONS_SELFIE_VERIFICATION.filter(
+      (opt) => !this.options[opt]
+    );
+    if (missing.length > 0) {
+      throw new Error(
+        `IdentityValidator: Missing required option(s): ${missing.join(", ")}`
+      );
+    } else {
+      setupSelfieValidation(this.options);
+    }
   }
 }
 
